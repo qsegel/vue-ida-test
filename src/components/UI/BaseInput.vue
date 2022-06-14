@@ -8,6 +8,7 @@
       :class="{ 'input-invalid': invalid }"
       :aria-describedby="`${id}-feedback`"
       autocomplete="off"
+      @keypress="$emit('keypress', $event)"
       @input="$emit('input', $event.target.value)"
       @blur="$emit('blur', $event)"
     />

@@ -39,7 +39,8 @@
         :required="true"
         :invalid="newProduct.price.touched && priceInvalid"
         @blur="newProduct.price.touched = true"
-        @input="handlePriceInput"
+        @keypress="handlePriceInput"
+        @input="input"
       />
       <button :disabled="formInvalid" type="submit">Добавить товар</button>
     </form>
@@ -78,7 +79,8 @@ export default {
           touched: false,
           validators: [required]
         }
-      }
+      },
+      isOnlyNumber: true
     }
   },
   computed: {
@@ -108,8 +110,20 @@ export default {
   },
 
   methods: {
-    handlePriceInput(newValue) {
-      this.newProduct.price.value = parseInt(newValue.replace(/\D/g, ''))
+    input(evt) {
+      if (this.isOnlyNumber) {
+        this.newProduct.price.value = +evt.replace(/\D/g, '')
+      }
+    },
+    handlePriceInput(evt) {
+      evt = evt ? evt : window.event
+      var keyCode = evt.which ? evt.which : evt.keyCode
+      if (keyCode > 31 && (keyCode < 48 || keyCode > 57) && keyCode !== 46) {
+        this.isOnlyNumber = false
+        evt.preventDefault()
+      } else {
+        this.isOnlyNumber = true
+      }
     },
     createProduct() {
       const product = {
